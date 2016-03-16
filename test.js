@@ -417,7 +417,7 @@ describe('SitemapStream', () => {
         sitemap.writer.on('finish', () => {
           const fileContent = fs.readFileSync('test.xml');
 
-          expect(fileContent.toString()).to.be.equal(`<loc>/some-path</loc>\n<lastmod>${now}</lastmod>\n`);
+          expect(fileContent.toString()).to.be.equal(`<url>\n<loc>/some-path</loc>\n<lastmod>${now}</lastmod>\n</url>\n`);
 
           done();
         });
@@ -468,7 +468,7 @@ describe('SitemapStream', () => {
         sitemap.writer.on('finish', () => {
           const fileContent = fs.readFileSync('test.xml');
 
-          expect(fileContent.toString()).to.be.equal(`<loc>/some-path</loc>\n<lastmod>${now}</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n<mobile:mobile/>\n`);
+          expect(fileContent.toString()).to.be.equal(`<url>\n<loc>/some-path</loc>\n<lastmod>${now}</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n<mobile:mobile/>\n</url>\n`);
 
           done();
         });
@@ -615,7 +615,7 @@ describe('SitemapStream', () => {
 
         for (let i = 1; i <= (highWaterMark * 2); i++) {
           const buffered = i >= highWaterMark && i <= limit;
-          let written = sitemap.inject('url');
+          let written = sitemap.inject('http://example.com/path');
 
           expect(written).to.equal(!buffered);
         }
@@ -630,7 +630,9 @@ describe('SitemapStream', () => {
     let sitemap = require('./index')();
 
     beforeEach('generate a new sitemap generator', () => {
-      sitemap = require('./index')();
+      sitemap = require('./index')({
+        sitemapDirectoryUrl: 'http://www.example.com'
+      });
     });
 
     afterEach('should remove generated xml files', (done) => {
