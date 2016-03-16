@@ -141,7 +141,8 @@ class SitemapStream extends EventEmitter {
 
     const nbSitemaps = (this.nbInjectedUrls / this.limit) + 1;
     for (let i=1; i<=nbSitemaps; i++) {
-      const loc = url.resolve(this.sitemapDirectoryUrl, `sitemap-${i}.xml`);
+      const ext = this.toCompress ? 'xml.gz' : 'xml';
+      const loc = url.resolve(this.sitemapDirectoryUrl, `sitemap-${i}.${ext}`);
 
       this.writer.write(`<sitemap>\n<loc>${loc}</loc>\n<lastmod>${this.date}</lastmod>\n</sitemap>\n`);
     }
